@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+require 'nokogiri'
+require 'open-uri'
+
+# Usage forsale
+#	./aqarmap sale cairo 
+#	./aqarmap sale alexandria 
+#	./aqarmap rent alexandria 
+#	./aqarmap sale aswan
+
+baseurl="https://egypt.aqarmap.com/en/"
+if ARGV[0] == "sale" then 
+	url="for-sale/apartment/#{ARGV[1]}/" 
+elsif ARGV[0] == "rent" then
+	url="for-rent/apartment/#{ARGV[1]}/" 
+else
+	puts	"command not recongized"
+end
+
+
+
+# Fetch and parse HTML document
+10000000.times do |page|
+	#https://egypt.aqarmap.com/en/for-sale/apartment/cairo/?page=2
+	doc = Nokogiri::HTML(open(baseurl+url+"?page=#{page}"))
+
+	#Search all pages, all nodes by css
+	30.times do |i|
+		target="div.small-card:nth-child(#{i}) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > h2:nth-child(1) > a:nth-child(1)"
+
+		doc.css(target).each do |link|
+			pch=00000000000000000000
+			cch=doc.css(target).hash
+			puts link.content
+			if cch==pch then 
+				"end of the list; exit program"
+				exit(0) # Exits with "success" code
+			end	
+		end
+		pch=doc.css(target).hash
+	end
+	puts "###############  #{page}  ###################"
+end
