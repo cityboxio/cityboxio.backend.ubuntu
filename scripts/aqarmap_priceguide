@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+require 'nokogiri'
+require 'open-uri'
+
+# Usage forsale
+#	./aqarmap nhood cairo el-maadi
+
+doc = Nokogiri::HTML(open("https://egypt.aqarmap.com/en/neighborhood/#{ARGV[1]}/"))
+hoods=[]
+100.times do |i|
+	target="div.col-md-4:nth-child(#{i}) > div:nth-child(1) > p:nth-child(2) > a:nth-child(1)"	
+	doc.css(target).each do |link|
+		#puts link['href']
+		uri=link['href']
+		hood = URI(uri).path.split('/').last	
+		hoods << hood
+		#hoods << link.content
+	end
+end
+
+baseurl="https://egypt.aqarmap.com/en/"
+
+i=1
+hoods.each do |hood|
+	puts "" 
+	puts "------------------------------- #{i} -------------------------------------"
+	puts "" 
+	#jurl="neighborhood/#{ARGV[1]}/#{hood.gsub(/(\s|\u00A0)+/, ' ').gsub(" ","-")}" 
+	url="neighborhood/#{ARGV[1]}/#{hood.gsub(" ", "-")}" 
+	#puts hood 
+	#puts(baseurl+url)
+	doc = Nokogiri::HTML(open(baseurl+url))
+
+	#puts "Average Price per Meter in:	" + "#{ARGV[2]}"
+	puts "Average Price per Meter in:	" + "#{hood}"
+	target="div.avg-price-widget-container:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+	doc.css(target).each do |link|
+		puts "Apartment:			" + link.content.gsub("\n","")
+	end
+
+	target="div.avg-price-widget-container:nth-child(2) > div:nth-child(1) > span:nth-child(1)"
+	doc.css(target).each do |link|
+		puts "Villa:				" + link.content.gsub("\n","")
+	end
+
+	# last updated
+	target="p.pull-right"
+	lastupdated= doc.css(target).each do |link|
+		puts link.content
+	end
+	#js = doc.at('script').text
+	#puts js
+	puts "" 
+	puts "-----------------------------------------------------------------------"
+	puts "" 
+	i=i+1
+end

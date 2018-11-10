@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require 'nokogiri'
+require 'open-uri'
+#require 'uri'
+
+# Usage get links of nhoods 
+
+doc = Nokogiri::HTML(open("https://egypt.aqarmap.com/en/neighborhood/cairo/"))
+hoods=[]
+100.times do |i|
+	#"div.col-md-4:nth-child(14) > div:nth-child(1) > p:nth-child(2) > a:nth-child(1)"
+	target="div.col-md-4:nth-child(#{i}) > div:nth-child(1) > p:nth-child(2) > a:nth-child(1)"	
+	#doc.css(target).map do |link| 
+	doc.css(target).each do |link| 
+		#puts link['href']
+		uri=link['href']
+		puts URI(uri).path.split('/').last	
+	end
+end

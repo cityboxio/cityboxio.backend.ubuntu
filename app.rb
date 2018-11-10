@@ -7,4 +7,3 @@ end
 get "/opendatahub" do
 	`./endpoints/opendatahub.sh`
 end
-

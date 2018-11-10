@@ -4,9 +4,12 @@ require 'nokogiri'
 require 'open-uri'
 
 # Usage forsale
-#	./aqarmap sale cairo 
-#	./aqarmap sale alexandria 
-#	./aqarmap rent alexandria 
+#	./aqarmap sale cairo
+#	./aqarmap sale cairo el-maadi
+#	./aqarmap sale cairo dokki
+#	./aqarmap sale cairo helwan
+#	./aqarmap sale alexandria
+#	./aqarmap rent alexandria
 #	./aqarmap sale aswan
 
 baseurl="https://egypt.aqarmap.com/en/"
@@ -18,7 +21,11 @@ else
 	puts	"command not recongized"
 end
 
-
+# For subcity...
+if !ARGV[2].empty? then
+	puts ARGV[2].empty?
+	url=url+"#{ARGV[2]}/"
+end
 
 # Fetch and parse HTML document
 10000000.times do |page|
@@ -36,7 +43,7 @@ end
 			if cch==pch then 
 				"end of the list; exit program"
 				exit(0) # Exits with "success" code
-			end	
+			end
 		end
 		pch=doc.css(target).hash
 	end
