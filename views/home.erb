@@ -1,0 +1,17 @@
+<html>
+	<body>
+		<h1> Welcome to RED </h2>
+		<% if session['current_user.email'] == "m.fouad@email.com" %>
+			<p> cool, the user is logged in the content is approved to be shown </p>
+			<p> <%= session[:energy] %> </p>
+		<% else %> 
+			<p> "no energy for this user coz he is not logged in and the content is not approved to be shown" 
+			</p>                
+		<% end %> 
+
+		<p> redis energy <%= session[:db_energy] %> </p>    
+		@@profile 
+		<h1> This is your profile </h2>
+		<p> <%= session[:energy] %> </p>
+	</body>
+</html>
